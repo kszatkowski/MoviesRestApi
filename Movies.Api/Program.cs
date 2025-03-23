@@ -42,6 +42,8 @@ builder.Services.AddAuthorization(x =>
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddApplication();
 builder.Services.AddDatabase(configuration["Database:ConnectionString"]!);
 
@@ -51,6 +53,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

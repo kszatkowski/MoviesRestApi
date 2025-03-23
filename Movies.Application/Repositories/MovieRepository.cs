@@ -40,17 +40,38 @@ public class MovieRepository : IMovieRepository
         return result > 0;
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync(Guid? userId = default, CancellationToken token = default)
+    public async Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options, CancellationToken token = default)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
-        var result = await connection.QueryAsync(new CommandDefinition("""
+        var orderClause = string.Empty;
+
+        if (options.SortField is not null)
+        {
+            orderClause = $"""
+            , m.{options.SortField}
+            ORDER BY m.{options.SortField} {(options.SortOrder == SortOrder.Ascending ? "ASC" : "DESC")}
+            """;
+        }
+
+        var result = await connection.QueryAsync(new CommandDefinition($"""
             SELECT m.*, string_agg(DISTINCT g.name, ',') as genres, round(avg(r.rating), 1) as rating, myr.rating as userrating
             FROM movies m
             LEFT JOIN genres g on m.id = g.movieid
             LEFT JOIN ratings r ON m.id = r.movieid
             LEFT JOIN ratings myr ON m.id = myr.movieid AND myr.userid = @userId
-            GROUP BY m.id, userrating
-        """, new { userId }, cancellationToken: token));
+            WHERE (@title IS NULL OR m.title LIKE ('%' || @title || '%'))
+            AND (@yearOfRelease IS NULL OR m.yearofrelease = @yearOfRelease)
+            GROUP BY m.id, userrating {orderClause}
+            LIMIT @pageSize
+            OFFSET @pageOffset
+        """, new 
+        { 
+            userId = options.UserId,
+            title = options.Title,
+            yearOfRelease = options.YearOfRelease,
+            pageSize = options.PageSize,
+            pageOffset = (options.Page - 1) * options.PageSize
+        }, cancellationToken: token));
 
         return result.Select(x => new Movie
         {
@@ -100,7 +121,7 @@ public class MovieRepository : IMovieRepository
             FROM movies m
             LEFT JOIN ratings r ON m.id = r.movieid
             LEFT JOIN ratings myr ON m.id = myr.movieid AND myr.userid = @userId
-            WHERE id = @id
+            WHERE slug = @slug
             GROUP BY m.id, userrating
         """, new { slug, userId }, cancellationToken: token));
 
@@ -173,5 +194,17 @@ public class MovieRepository : IMovieRepository
         return await connection.ExecuteScalarAsync<bool>(new CommandDefinition("""
             select count(1) from movies where id = @id
         """, new { id }, cancellationToken: token));
+    }
+
+    public async Task<int> GetCountAsync(string? title, int? yearOfRelease, CancellationToken token = default)
+    {
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
+
+        return await connection.QuerySingleAsync<int>(new CommandDefinition("""
+            SELECT COUNT(id)
+            FROM movies
+            WHERE (@title IS NULL OR title LIKE ('%' || @title || '%'))
+            AND (@yearOfRelease IS NULL OR yearofrelease = @yearOfRelease)
+        """, new { title, yearOfRelease }, cancellationToken: token));
     }
 }
