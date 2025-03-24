@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Movies.Api.Auth;
+using Movies.Api.Health;
 using Movies.Api.Mapping;
 using Movies.Api.Swagger;
 using Movies.Application;
@@ -56,6 +57,10 @@ builder.Services.AddSwaggerGen(x => x.OperationFilter<SwaggerDefaultValues>());
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+
+builder.Services.AddHealthChecks()
+    .AddCheck<DatabaseHealthCheck>(DatabaseHealthCheck.Name);
+
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
@@ -76,6 +81,8 @@ if (app.Environment.IsDevelopment())
         }
     });
 }
+
+app.MapHealthChecks("_health");
 
 app.UseHttpsRedirection();
 
