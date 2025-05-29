@@ -1,4 +1,4 @@
-namespace Movies.Api.Auth;
+namespace Movies.Api;
 
 public static class ApiEndpoints
 {
