@@ -54,3 +54,6 @@ TestResult.xml
 nunit-*.xml
 
 .DS_Store
+
+Movies.Api/appsettings.Development.json
+Movies.Api/.env
