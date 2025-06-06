@@ -14,7 +14,14 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new MovieConfiguration());
+        modelBuilder.ApplyConfiguration(new GenreConfiguration());
+        
+        modelBuilder.Entity<Movie>()
+            .HasMany(m => m.Genres)
+            .WithMany(g => g.Movies)
+            .UsingEntity(j => j.ToTable("MovieGenres"));
     }
-    
+
     public DbSet<Movie> Movies { get; set; }
+    public DbSet<Genre> Genres { get; set; }
 }
