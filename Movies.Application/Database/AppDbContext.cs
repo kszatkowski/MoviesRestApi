@@ -6,10 +6,7 @@ namespace Movies.Application.Database;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-        
-    }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,6 +17,8 @@ public class AppDbContext : DbContext
             .HasMany(m => m.Genres)
             .WithMany(g => g.Movies)
             .UsingEntity(j => j.ToTable("MovieGenres"));
+        
+        SeedData.SeedGenres(modelBuilder);
     }
 
     public DbSet<Movie> Movies { get; set; }

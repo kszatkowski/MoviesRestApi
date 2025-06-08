@@ -9,5 +9,6 @@ public class ApiEndpoints
         private const string Base = $"{ApiBase}/movies";
 
         public const string GetAll = Base;
+        public const string Get = $"{Base}/{{id:guid}}";
     }
 }
