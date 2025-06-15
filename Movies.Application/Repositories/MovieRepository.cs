@@ -39,4 +39,9 @@ public class MovieRepository(AppDbContext appDbContext) : IMovieRepository
 
         return await query.FirstOrDefaultAsync(movie => movie.Id == id, token);
     }
+
+    public async Task CreateAsync(Movie movie, CancellationToken token = default)
+    {
+        await appDbContext.Movies.AddAsync(movie, token);
+    }
 }

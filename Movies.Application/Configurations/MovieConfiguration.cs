@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Movies.Application.Constants;
 using Movies.Application.Entities;
 
 namespace Movies.Application.Configurations;
@@ -10,11 +11,11 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
     {
         builder.Property(m => m.Title)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(MovieConstraints.TitleMaxLength);
 
         builder.Property(m => m.YearOfRelease).IsRequired();
 
         builder.Property(m => m.Description)
-            .HasMaxLength(2000);
+            .HasMaxLength(MovieConstraints.DescriptionMaxLength);
     }
 }

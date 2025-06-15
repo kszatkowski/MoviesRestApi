@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Movies.Application.Database;
@@ -12,7 +13,10 @@ public static class ApplicationServiceCollectionExtensions
     {
         services.AddScoped<IMovieRepository, MovieRepository>();
         services.AddScoped<IMovieService, MovieService>();
-        
+        services.AddScoped<IGenreRepository, GenreRepository>();
+        services.AddValidatorsFromAssemblyContaining<IApplicationMarker>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         return services;
     }
 

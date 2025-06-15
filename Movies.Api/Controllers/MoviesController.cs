@@ -34,4 +34,13 @@ public class MoviesController(IMovieService movieService) : ControllerBase
         
         return Ok(response);
     }
+
+    [HttpPost(ApiEndpoints.Movies.Create)]
+    public async Task<IActionResult> Create([FromBody] UpsertMovieRequest request, CancellationToken cancellationToken)
+    {
+        var movie = await movieService.CreateAsync(request, cancellationToken);
+        var response = movie.MapToResponse();
+
+        return CreatedAtAction(nameof(Get), new { response.Id }, response);
+    }
 }
