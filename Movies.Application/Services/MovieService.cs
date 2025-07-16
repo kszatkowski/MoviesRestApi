@@ -51,4 +51,60 @@ public class MovieService(
             throw;
         }
     }
+
+    public async Task<Movie?> UpdateAsync(Guid id, UpsertMovieRequest request, CancellationToken token = default)
+    {
+        await movieValidator.ValidateAndThrowAsync(request, token);
+        var movie = await movieRepository.GetAsync(id, new MovieOptions() { Include = new List<MovieIncludeOption> { MovieIncludeOption.Genres } }, token);
+
+        if (movie == null)
+        {
+            return null;
+        }
+
+        var selectedGenres = await genreRepository.GetByIdsAsync(request.GenreIds, token);
+
+        await unitOfWork.BeginTransactionAsync();
+
+        try
+        {
+            ApplyUpdate(request, movie, selectedGenres);
+            await unitOfWork.CommitAsync();
+
+            return movie;
+        }
+        catch
+        {
+            await unitOfWork.RollbackAsync();
+            throw;
+        }
+    }
+
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken token = default)
+    {
+        var movie = await movieRepository.GetAsync(id, token: token);
+
+        if (movie == null)
+        {
+            return false;
+        }
+        
+        movieRepository.Delete(movie);
+        await unitOfWork.SaveChangesAsync();
+
+        return true;
+    }
+    
+    private void ApplyUpdate(UpsertMovieRequest request, Movie movie, IReadOnlyList<Genre> genres)
+    {
+        movie.Title = request.Title;
+        movie.Description = request.Description;
+        movie.YearOfRelease = request.YearOfRelease;
+
+        movie.Genres.Clear();
+        foreach (var genre in genres)
+        {
+            movie.Genres.Add(genre);
+        }
+    }
 }

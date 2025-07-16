@@ -28,11 +28,11 @@ public class MovieRepository(AppDbContext appDbContext) : IMovieRepository
         return await appDbContext.Movies.CountAsync(token);
     }
 
-    public async Task<Movie?> GetAsync(Guid id, MovieOptions options, CancellationToken token = default)
+    public async Task<Movie?> GetAsync(Guid id, MovieOptions? options, CancellationToken token = default)
     {
         IQueryable<Movie> query = appDbContext.Movies;
 
-        if (options.Include.Contains(MovieIncludeOption.Genres))
+        if (options != null && options.Include.Contains(MovieIncludeOption.Genres))
         {
             query = query.Include(m => m.Genres);
         }
@@ -43,5 +43,10 @@ public class MovieRepository(AppDbContext appDbContext) : IMovieRepository
     public async Task CreateAsync(Movie movie, CancellationToken token = default)
     {
         await appDbContext.Movies.AddAsync(movie, token);
+    }
+
+    public void Delete(Movie movie)
+    {
+        appDbContext.Movies.Remove(movie);
     }
 }
