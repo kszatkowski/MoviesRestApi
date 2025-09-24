@@ -1,6 +1,6 @@
-using Movies.Application.Entities;
+using Movies.Domain.Entities;
 
-namespace Movies.Application.Repositories;
+namespace Movies.Domain.Repositories;
 
 public interface IGenreRepository
 {

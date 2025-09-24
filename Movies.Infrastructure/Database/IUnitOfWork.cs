@@ -1,4 +1,4 @@
-namespace Movies.Application.Database;
+namespace Movies.Infrastructure.Database;
 
 public interface IUnitOfWork : IDisposable
 {

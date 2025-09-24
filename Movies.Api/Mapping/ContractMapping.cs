@@ -1,7 +1,7 @@
-using Movies.Application.Entities;
 using Movies.Application.Models;
 using Movies.Contracts.Requests;
 using Movies.Contracts.Responses;
+using Movies.Domain.Entities;
 
 namespace Movies.Api.Mapping;
 
@@ -48,6 +48,17 @@ public static class ContractMapping
             Page = page,
             PageSize = pageSize,
             Total = total
+        };
+    }
+
+    public static MoviesResponse MapToResponse(this PagedResult<Movie> pagedResult)
+    {
+        return new MoviesResponse()
+        {
+            Items = pagedResult.Items.Select(MapToResponse),
+            Page = pagedResult.PageNumber,
+            PageSize = pagedResult.PageSize,
+            Total = pagedResult.TotalCount
         };
     }
 }

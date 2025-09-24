@@ -1,6 +1,6 @@
-using Movies.Application.Entities;
 using Movies.Contracts.Requests;
-    
+using Movies.Domain.Entities;
+
 namespace Movies.Application.Mapping;
 
 public static class MovieContractMapping

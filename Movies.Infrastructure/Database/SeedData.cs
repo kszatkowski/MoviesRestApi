@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Movies.Application.Entities;
+using Movies.Domain.Entities;
 
-namespace Movies.Application.Database;
+namespace Movies.Infrastructure.Database;
 
 public static class SeedData
 {

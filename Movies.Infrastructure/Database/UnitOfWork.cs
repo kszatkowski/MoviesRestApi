@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Movies.Application.Database;
+namespace Movies.Infrastructure.Database;
 
 public class UnitOfWork(AppDbContext appDbContext) : IUnitOfWork
 {

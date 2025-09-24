@@ -1,4 +1,4 @@
-namespace Movies.Application.Constants;
+namespace Movies.Domain.Constants;
 
 public static class MovieConstraints
 {

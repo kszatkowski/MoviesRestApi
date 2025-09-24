@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Movies.Application.Configurations;
-using Movies.Application.Entities;
+using Movies.Domain.Entities;
+using Movies.Infrastructure.Configurations;
 
-namespace Movies.Application.Database;
+namespace Movies.Infrastructure.Database;
 
 public class AppDbContext : DbContext
 {

@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Movies.Application.Database;
-using Movies.Application.Entities;
+using Movies.Domain.Entities;
+using Movies.Domain.Repositories;
+using Movies.Infrastructure.Database;
 
-namespace Movies.Application.Repositories;
+namespace Movies.Infrastructure.Repositories;
 
 public class GenreRepository(AppDbContext appDbContext) : IGenreRepository
 {

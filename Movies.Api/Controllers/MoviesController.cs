@@ -12,9 +12,8 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] GetAllMoviesRequest request, CancellationToken cancellationToken)
     {
         var options = request.MapToMoviesOptions();
-        var movies = await movieService.GetAllAsync(options, cancellationToken);
-        var totalCount = await movieService.GetTotalCountAsync(cancellationToken);
-        var response = movies.MapToResponse(options.Page, options.PageSize, totalCount);
+        var pagedResult = await movieService.GetAllAsync(options, cancellationToken);
+        var response = pagedResult.MapToResponse();
 
         return Ok(response);
     }
@@ -24,12 +23,12 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     {
         var options = request.MapToMovieOptions();
         var movie = await movieService.GetAsync(id, options, cancellationToken);
-
+    
         if (movie == null)
         {
             return NotFound();
         }
-
+    
         var response = movie.MapToResponse();
         
         return Ok(response);
@@ -40,22 +39,22 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     {
         var movie = await movieService.CreateAsync(request, cancellationToken);
         var response = movie.MapToResponse();
-
+    
         return CreatedAtAction(nameof(Get), new { response.Id }, response);
     }
-
+    
     [HttpPut(ApiEndpoints.Movies.Update)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpsertMovieRequest request, CancellationToken cancellationToken)
     {
         var movie = await movieService.UpdateAsync(id, request, cancellationToken);
-
+    
         if (movie == null)
         {
             return NotFound();
         }
-
+    
         var response = movie.MapToResponse();
-
+    
         return Ok(response);
     }
 
@@ -63,12 +62,12 @@ public class MoviesController(IMovieService movieService) : ControllerBase
     public async Task<IActionResult> Delete([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await movieService.DeleteAsync(id, cancellationToken);
-
+    
         if (result == false)
         {
             return NotFound();
         }
-
+    
         return Ok();
     }
 }

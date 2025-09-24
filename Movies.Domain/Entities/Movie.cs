@@ -1,10 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace Movies.Application.Entities;
+namespace Movies.Domain.Entities;
 
 public class Movie
 {
-    [Key]
     public Guid Id { get; set; }
     public required string Title { get; set; }
     public required int YearOfRelease { get; set; }

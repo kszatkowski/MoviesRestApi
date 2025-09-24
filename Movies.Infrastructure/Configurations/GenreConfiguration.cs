@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Movies.Application.Entities;
+using Movies.Domain.Entities;
 
-namespace Movies.Application.Configurations;
+namespace Movies.Infrastructure.Configurations;
 
 public class GenreConfiguration : IEntityTypeConfiguration<Genre>
 {

@@ -1,5 +1,6 @@
 using Movies.Api;
 using Movies.Application;
+using Movies.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

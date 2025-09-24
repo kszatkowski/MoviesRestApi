@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Movies.Application.Constants;
-using Movies.Application.Entities;
+using Movies.Domain.Constants;
+using Movies.Domain.Entities;
 
-namespace Movies.Application.Configurations;
+namespace Movies.Infrastructure.Configurations;
 
 public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 {
